@@ -22,4 +22,10 @@ public class PostController {
         List<Post> posts = postService.findAll(pageNo, pageSize);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
+
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        Post post = postService.findById(id);
+        return new ResponseEntity<>(post, HttpStatus.OK);
+    }
 }

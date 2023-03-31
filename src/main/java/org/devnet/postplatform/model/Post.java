@@ -13,6 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @NamedEntityGraphs({
         @NamedEntityGraph(
+                name = "post-only"
+        ),
+        @NamedEntityGraph(
                 name = "post-tags",
                 attributeNodes = {
                         @NamedAttributeNode("tags")

@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
@@ -26,4 +27,20 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "where p.id in :postIds"
     )
     List<Post> findAllByIdWithTags(@Param("postIds") List<Long> postIds);
+    // Split the filtering and the fetching into two separate queries
+
+    // FIND POST BY ID
+    @Query("select p " +
+            "from Post p " +
+            "left join fetch p.author " +
+            "left join fetch p.comments " +
+            "where p.id = :postId")
+    Optional<Post> findPostById(@Param("postId") Long id);
+
+    @Query("select p " +
+            "from Post p " +
+            "left join fetch p.tags " +
+            "where p.id = :postId")
+    Optional<Post> findPostByIdWithTags(@Param("postId") Long id);
+    // FIND POST BY ID
 }
