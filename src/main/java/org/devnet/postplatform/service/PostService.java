@@ -3,12 +3,10 @@ package org.devnet.postplatform.service;
 import lombok.RequiredArgsConstructor;
 import org.devnet.postplatform.model.Post;
 import org.devnet.postplatform.repository.PostRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,16 +14,11 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
 
+    @Transactional(readOnly = true)
     public List<Post> findAll(Integer pageNo, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Post> page = postRepository.findAll(pageable);
-        if (page.hasContent()) {
-            return page.getContent();
-        }
-        return new ArrayList<>();
-    }
-
-    public List<Post> findAll() {
-        return postRepository.findAll();
+        PageRequest pageable = PageRequest.of(pageNo, pageSize);
+        return postRepository
+                .findAllByIdWithTags(postRepository
+                        .findAllPostIds(pageable));
     }
 }

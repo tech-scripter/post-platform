@@ -35,12 +35,20 @@ public class Post {
 
     private Long likes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User author;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<Comment> comments;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     private List<Tag> tags;
 }
